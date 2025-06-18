@@ -1,20 +1,3 @@
 spring:
-  application:
-    name: logistics-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/logistics
-    username: root
-    password: password
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
-  doc:
-    api-docs:
-      enabled: true
-      path: /api-docs
-    swagger-ui:
-      enabled: true
-      path: /swagger-ui.html
+  profiles:
+    active: dev

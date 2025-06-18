@@ -18,8 +18,10 @@ public class Order {
     private String customerName;
     private String deliveryAddress;
     private String deliveryZone;
-
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    // Getters and Setters
+    @ManyToOne
+    private DeliveryAgent assignedAgent;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+    private int retryCount = 0;
 }
