@@ -5,6 +5,7 @@ import com.logistics.entity.DeliveryAgent;
 import com.logistics.repository.DeliveryAgentRepository;
 import com.logistics.util.ZoneMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class DeliveryAgentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DeliveryAgent> addAgent(@RequestBody DeliveryAgentDto dto) {
         DeliveryAgent agent = new DeliveryAgent();
         agent.setName(dto.getName());
@@ -29,6 +31,7 @@ public class DeliveryAgentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<DeliveryAgent>> getAllAgents() {
         return ResponseEntity.ok(agentRepository.findAll());
     }

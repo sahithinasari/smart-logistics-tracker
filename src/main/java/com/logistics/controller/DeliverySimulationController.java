@@ -6,6 +6,7 @@ import com.logistics.entity.OrderStatus;
 import com.logistics.messaging.DeliveryEventProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class DeliverySimulationController {
     }
 
     @PostMapping("/{orderId}/{status}")
+    @PreAuthorize("hasRole('AGENT') or hasRole('ADMIN')")
     public ResponseEntity<String> simulateDelivery(@PathVariable Long orderId, @PathVariable OrderStatus status) throws JsonProcessingException {
         DeliveryStatusEvent event = new DeliveryStatusEvent();
         event.setOrderId(orderId);

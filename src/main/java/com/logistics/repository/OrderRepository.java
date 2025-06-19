@@ -12,6 +12,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByVendorId(String vendorId);
     List<Order> findByStatus(OrderStatus status);
     List<Order> findByStatusAndRetryCountGreaterThanEqual(OrderStatus status, int retryCount);
+    long countByVendorId(String vendorId);
+    long countByVendorIdAndStatus(String vendorId, OrderStatus status);
+
+    long countByStatus(OrderStatus status);
+
+    long countByAssignedAgentName(String agentName);
+    long countByAssignedAgentNameAndStatus(String agentName, OrderStatus status);
 
 
 }

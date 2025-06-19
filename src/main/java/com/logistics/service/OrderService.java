@@ -50,5 +50,31 @@ public class OrderService {
     public List<Order> getFailedOrdersWithMinRetries(int retries) {
         return orderRepository.findByStatusAndRetryCountGreaterThanEqual(OrderStatus.FAILED,retries);
     }
+    // -------- VENDOR Dashboard Methods --------
+    public long countByVendor(String vendorId) {
+        return orderRepository.countByVendorId(vendorId);
+    }
+
+    public long countByVendorAndStatus(String vendorId, OrderStatus status) {
+        return orderRepository.countByVendorIdAndStatus(vendorId, status);
+    }
+
+    // -------- ADMIN Dashboard Methods --------
+    public long countAll() {
+        return orderRepository.count();
+    }
+
+    public long countByStatus(OrderStatus status) {
+        return orderRepository.countByStatus(status);
+    }
+
+    // -------- AGENT Dashboard Methods --------
+    public long countByAgent(String agentName) {
+        return orderRepository.countByAssignedAgentName(agentName);
+    }
+
+    public long countByAgentAndStatus(String agentName, OrderStatus status) {
+        return orderRepository.countByAssignedAgentNameAndStatus(agentName, status);
+    }
 
 }

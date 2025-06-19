@@ -20,6 +20,12 @@ spring:
     swagger-ui:
       enabled: true
       path: /swagger-ui.html
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/smart-logistics-tracker
+
 server:
   port: 2045
 assignment:
