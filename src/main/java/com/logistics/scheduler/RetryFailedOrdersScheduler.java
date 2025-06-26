@@ -29,7 +29,7 @@ public class RetryFailedOrdersScheduler {
         this.assignmentService = assignmentService;
     }
 
-    @Scheduled(fixedDelay = 60000) // Every 60 seconds
+  //  @Scheduled(fixedDelay = 60000) // Every 60 seconds
     public void retryFailedOrders() {
         List<Order> failedOrders = orderRepository.findAll().stream()
                 .filter(order -> order.getStatus() == OrderStatus.FAILED)

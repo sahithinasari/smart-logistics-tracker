@@ -7,10 +7,7 @@ import com.logistics.repository.DeliveryAgentRepository;
 import com.logistics.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,14 +35,14 @@ public class AdminDashboardController {
         summary.put("zones", agentRepo.findAll().stream().map(DeliveryAgent::getZone).distinct().count());
         return ResponseEntity.ok(summary);
     }
-    @GetMapping("/admin/status")
+    @GetMapping("/status")
     public ResponseEntity<List<Order>> getOrdersByStatus(@RequestParam(required = false) OrderStatus status) {
         if (status != null) {
             return ResponseEntity.ok(orderService.getOrdersByStatus(status));
         }
         return ResponseEntity.ok(orderService.getAllOrders());
     }
-    @GetMapping("/admin/failed")
+    @GetMapping("/failed")
     public ResponseEntity<List<Order>> getFailedOrders(@RequestParam(defaultValue = "5") int minRetries) {
         return ResponseEntity.ok(orderService.getFailedOrdersWithMinRetries(minRetries));
     }
