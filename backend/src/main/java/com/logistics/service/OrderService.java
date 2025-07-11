@@ -4,6 +4,7 @@ import com.logistics.dto.OrderRequestDto;
 import com.logistics.entity.DeliveryAgent;
 import com.logistics.entity.Order;
 import com.logistics.entity.OrderStatus;
+import com.logistics.exception.order.OrderNotFoundException;
 import com.logistics.repository.OrderRepository;
 import com.logistics.util.ZoneMapper;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,8 @@ public class OrderService {
         order.setStatus(agent == null ? OrderStatus.FAILED : OrderStatus.ASSIGNED);
         return orderRepository.save(order);
     }
-    public Optional<Order> getOrderById(Long id) {
-        return orderRepository.findById(id);
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElseThrow(()->new OrderNotFoundException(id));
     }
 
     public List<Order> getAllOrders() {

@@ -2,8 +2,8 @@ package com.logistics.controller;
 
 import com.logistics.dto.OrderRequestDto;
 import com.logistics.entity.Order;
-import com.logistics.entity.OrderStatus;
 import com.logistics.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +33,11 @@ public class OrderController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return orderService.getOrderById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(orderService.getOrderById(id));
     }
     @PostMapping
     @PreAuthorize("hasRole('VENDOR')")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequestDto dto) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequestDto dto) {
         Order savedOrder = orderService.createOrder(dto);
         return ResponseEntity.ok(savedOrder);
     }

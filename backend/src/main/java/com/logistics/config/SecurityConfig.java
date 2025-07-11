@@ -27,12 +27,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 👈 ALLOW preflight
-                        .requestMatchers("/api/orders/**").hasAnyRole("VENDOR", "ADMIN")
+                        //.requestMatchers("/api/orders/**").hasAnyRole("VENDOR", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/agent/**").hasRole("AGENT")
                         .requestMatchers(
                                 "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html",
-                                "/swagger-resources/**", "/webjars/**", "api-docs/**", "/role/**","/api/auth/**"
+                                "/swagger-resources/**", "/webjars/**", "api-docs/**", "/role/**","/api/auth/**",
+                                "/api/users/**","/api/users","/api/orders/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
