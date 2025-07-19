@@ -1,0 +1,5 @@
+# Ignore IntelliJ / WebStorm / PyCharm project settings
+.idea/
+
+# Optional: Ignore environment files
+.env

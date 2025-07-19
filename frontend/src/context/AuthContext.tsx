@@ -1,45 +1,75 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useState, useEffect } from "react";
-import storage from "../utils/storage";
+import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
+import keycloak from "../keycloak";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  token: string | null;
   role: string | null;
-  login: (token: string, role: string) => void;
+  login: () => void;
   logout: () => void;
+  getToken: () => Promise<string | undefined>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
   isAuthenticated: false,
-  token: null,
   role: null,
   login: () => {},
   logout: () => {},
+  getToken: async () => undefined,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(storage.getToken());
-  const [role, setRole] = useState<string | null>(storage.getRole());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
+  const initialized = useRef(false);
 
-  const login = (token: string, role: string) => {
-    storage.setToken(token);
-    storage.setRole(role);
-    setToken(token);
-    setRole(role);
+  const login = useCallback(() => keycloak.login(), []);
+  const logout = useCallback(() => keycloak.logout(), []);
+
+  const getToken = async () => {
+    try {
+      await keycloak.updateToken(30);
+      return keycloak.token;
+    } catch {
+      keycloak.login();
+    }
   };
+const navigate = useNavigate();
+ 
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
 
-  const logout = () => {
-    storage.removeToken();
-    storage.removeRole();
-    setToken(null);
-    setRole(null);
-  };
+    keycloak.init({ onLoad: "login-required", pkceMethod: "S256" }).then((authenticated) => {
+      setIsAuthenticated(authenticated);
 
-  const isAuthenticated = !!token;
+      if (authenticated && keycloak.tokenParsed) {
+        const parsed: any = keycloak.tokenParsed;
+        const roles: string[] = parsed.realm_access?.roles || [];
 
+        let userRole: string | null = null;
+        if (roles.includes("ADMIN")) userRole = "ADMIN";
+        else if (roles.includes("VENDOR")) userRole = "VENDOR";
+        else if (roles.includes("AGENT")) userRole = "AGENT";
+
+        setRole(userRole);
+
+        // Redirect to dashboard based on role
+        if (userRole) {
+          navigate(`/${userRole.toLowerCase()}`);
+        }
+
+        // Setup token refresh
+        const refreshInterval = setInterval(() => {
+          keycloak.updateToken(60).catch(() => keycloak.logout());
+        }, 60000);
+        return () => clearInterval(refreshInterval);
+      }
+    });
+  }, [navigate]);
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token, role, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, role, login, logout, getToken }}>
       {children}
     </AuthContext.Provider>
   );

@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/keycloak-js": "^3.4.1",
     "react-router-dom": "^7.6.2"
   }
 }
