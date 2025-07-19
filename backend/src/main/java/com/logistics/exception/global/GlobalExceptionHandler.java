@@ -42,23 +42,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ApiError> handleGeneralError(Exception ex, HttpServletRequest request) {
-//        String uri = request.getRequestURI();
-//
-//        // 🛑 Let Swagger-related exceptions fall through
-//        if (uri.contains("/swagger") || uri.contains("/api-docs")) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//
-//        ApiError error = ApiError.builder()
-//                .message("Unexpected error occurred")
-//                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-//                .timestamp(LocalDateTime.now())
-//                .path(uri)
-//                .details(ex.getMessage())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGeneralError(Exception ex, HttpServletRequest request) {
+        ApiError error = ApiError.builder()
+                .message("Unexpected error occurred")
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .details(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 }
