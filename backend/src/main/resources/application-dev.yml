@@ -35,3 +35,8 @@ server:
   port: 2045
 assignment:
   max-retries: 5
+openai:
+  api:
+    key: ${API_KEY}
+    url: https://api.openai.com/v1/chat/completions
+

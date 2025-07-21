@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-    info = @Info(title = "User Management API", version = "1.0"),
+    info = @Info(title = "Smart Logistics Tracker API", version = "1.0"),
     security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
